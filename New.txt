@@ -1,3 +1,5 @@
+:: Create file as .bat
+
 @echo off
 :: Check if running as administrator
 NET SESSION >nul 2>&1
@@ -10,7 +12,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 :: Create a VBScript to show the initial warning message
 echo Set objShell = CreateObject("WScript.Shell") > temp_warning.vbs
-echo objShell.Popup "WARNING: This is a dangerous file. No joke. Running this file might cause unexpected behavior, including data loss. Proceed at your own risk.", 0, "Dangerous File Warning", 48 >> temp_warning.vbs
+echo objShell.Popup "WARNING: This is a dangerous file. No joke. Running this file might cause unexpected behavior, including data loss. Proceed at your own risk. Creator of this will not respond to any loss or any damages.", 0, "Dangerous File Warning", 48 >> temp_warning.vbs
 
 :: Run the warning VBScript
 cscript //nologo temp_warning.vbs
@@ -22,6 +24,7 @@ del temp_warning.vbs
 color 4F
 echo **WARNING: This script is for entertainment purposes only.**
 echo Running this script might cause unexpected behavior, including data loss.
+echo Creator of this will not respond to any loss or damages.
 echo Proceed at your own risk.
 pause
 
@@ -52,10 +55,11 @@ del temp.vbs
 echo Would you like to restart your computer now? Press Y for Yes or N for No.
 set /p choice=Choice: 
 if /i "%choice%"=="Y" (
+    :: Send notification to Discord webhook
+    powershell -Command "Invoke-RestMethod -Uri 'YOUR_WEBHOOK_URL' -Method Post -Body (@{content='The script executed and the PC will restart. This is a prank!'} | ConvertTo-Json) -ContentType 'application/json'"
     shutdown /r /t 0
 ) else (
     echo You chose not to restart. The script will exit now.
 )
 
 pause
-
