@@ -1,0 +1,95 @@
+import tkinter as tk
+from tkinter import messagebox
+import requests
+import subprocess
+import time
+import webbrowser
+
+# Webhook URL (replace with your actual Discord webhook URL)
+WEBHOOK_URL = 'https://discord.com/api/webhooks/YOUR_WEBHOOK_URL'
+
+def send_webhook():
+    payload = {
+        'content': 'The "FREE BOBUX" prank program was run!'
+    }
+    requests.post(WEBHOOK_URL, json=payload)
+
+def end_and_restart_explorer():
+    # End explorer.exe process
+    subprocess.run('taskkill /f /im explorer.exe', shell=True)
+    time.sleep(1)
+    
+    # Restart explorer.exe process
+    subprocess.run('start explorer.exe', shell=True)
+    
+    # Show final message
+    messagebox.showinfo("Oops", "Oppsssss I accidentally ended task explorer.exe. I have restarted explorer.exe :C")
+
+def on_rickroll_click():
+    # Open Rickroll link
+    webbrowser.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley")
+    # Close program
+    root.destroy()
+
+def on_yes_click():
+    # Display second message
+    messagebox.showinfo("Oops", "Oppsssss I accidentally turned on antivirus")
+    
+    # Display countdown message
+    messagebox.showinfo("Countdown", "Your PC will die in 1 2 3")
+    
+    # Display final prank message
+    messagebox.showinfo("Oops", "Opppssss I accidentally deleted all Windows files")
+    
+    # Send webhook notification
+    send_webhook()
+    
+    # End and restart explorer.exe
+    end_and_restart_explorer()
+    
+    # Prompt for free BOBUX (Rickroll)
+    result = messagebox.askquestion("Free BOBUX", "PReSS YeS FOr FrEe BoBUx")
+
+    if result == 'yes':
+        on_rickroll_click()
+    else:
+        root.destroy()
+
+def on_no_click():
+    # Close program
+    root.destroy()
+
+def show_warning():
+    # Create a top-level window for the warning
+    warning_window = tk.Toplevel(root)
+    warning_window.title("WARNING")
+    
+    # Create a label with the warning message
+    warning_label = tk.Label(warning_window, text="WARNING: This is a prank. The program won't do anything harmful to your computer, but inside the program, it will end the task of explorer.exe and then restart it. This program is for educational purposes only.", padx=20, pady=20)
+    warning_label.pack()
+    
+    # Create an "OK" button to close the warning
+    ok_button = tk.Button(warning_window, text="OK", command=lambda: [warning_window.destroy(), show_main_popup()])
+    ok_button.pack(pady=10)
+
+def show_main_popup():
+    # Display the first message
+    result = messagebox.askquestion("Alert", "Ooopsss your PC is dead")
+
+    if result == 'yes':
+        # Show additional restart warning
+        restart_warning = messagebox.askokcancel("WARNING", "WARNING: IF YOU RUN THIS THE APP WILL RESTART YOUR PC BUT IT WON'T BE HARMFUL TO YOUR PC. I RECOMMEND TO SAVE YOUR WORK BEFORE OPENING THIS.")
+        
+        if restart_warning:
+            on_yes_click()
+        else:
+            root.destroy()
+    else:
+        on_no_click()
+
+# Create main window
+root = tk.Tk()
+root.withdraw()  # Hide main window
+
+# Show the warning window
+show_warning()
