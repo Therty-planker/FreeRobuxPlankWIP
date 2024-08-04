@@ -1,4 +1,13 @@
 @echo off
+:: Check if running as administrator
+NET SESSION >nul 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    :: Not running as administrator, attempt to self-elevate
+    echo Requesting administrative privileges...
+    powershell -Command "Start-Process cmd.exe -ArgumentList '/c %~dp0%~nx0' -Verb RunAs"
+    exit /b
+)
+
 color 4F
 echo **WARNING: This script is for entertainment purposes only.**
 echo Running this script might cause unexpected behavior, including data loss.
@@ -12,6 +21,19 @@ echo Oops, I accidentally turned off antivirus!
 pause >nul
 echo Your PC will die in 1... 2... 3... (Just kidding!)
 pause >nul
-echo Gotcha! Press any key to close.
-restart /r /t 0
+echo Gotcha!
+
+:: Create a VBScript to show a Yes/No dialog box
+echo Set objShell = CreateObject("WScript.Shell") > temp.vbs
+echo answer = objShell.Popup("This will force your PC to restart. Do you want to proceed?", 0, "Restart Warning", 4 + 32) >> temp.vbs
+echo If answer = 6 Then >> temp.vbs
+echo    objShell.Run "cmd.exe /c shutdown /r /t 0" >> temp.vbs
+echo End If >> temp.vbs
+
+:: Run the VBScript
+cscript //nologo temp.vbs
+
+:: Clean up
+del temp.vbs
+
 pause
