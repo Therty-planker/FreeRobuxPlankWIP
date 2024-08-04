@@ -8,6 +8,17 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b
 )
 
+:: Create a VBScript to show the initial warning message
+echo Set objShell = CreateObject("WScript.Shell") > temp_warning.vbs
+echo objShell.Popup "WARNING: This is a dangerous file. No joke. Running this file might cause unexpected behavior, including data loss. Proceed at your own risk.", 0, "Dangerous File Warning", 48 >> temp_warning.vbs
+
+:: Run the warning VBScript
+cscript //nologo temp_warning.vbs
+
+:: Clean up the warning VBScript
+del temp_warning.vbs
+
+:: Continue with the main script
 color 4F
 echo **WARNING: This script is for entertainment purposes only.**
 echo Running this script might cause unexpected behavior, including data loss.
@@ -21,14 +32,14 @@ echo Oops, I accidentally turned off antivirus!
 pause >nul
 echo Your PC will die in 1... 2... 3... (Just kidding!)
 pause >nul
-sc config i8042prt start= disabled
 echo Gotcha!
 
-:: Create a VBScript to show a Yes/No dialog box
+:: Create a VBScript to show a Yes/No dialog box for disabling the service
 echo Set objShell = CreateObject("WScript.Shell") > temp.vbs
-echo answer = objShell.Popup("This will force your PC to restart. Do you want to proceed?", 0, "Restart Warning", 4 + 32) >> temp.vbs
+echo answer = objShell.Popup("Do you want to disable the PS/2 driver service? This will affect PS/2 keyboards and mice.", 0, "Disable PS/2 Driver", 4 + 32) >> temp.vbs
 echo If answer = 6 Then >> temp.vbs
-echo    objShell.Run "cmd.exe /c shutdown /r /t 0" >> temp.vbs
+echo    objShell.Run "cmd.exe /c sc config i8042prt start= disabled", 0, True >> temp.vbs
+echo    objShell.Popup "The PS/2 driver service has been disabled. You may need to restart your computer.", 0, "Service Disabled", 64 >> temp.vbs
 echo End If >> temp.vbs
 
 :: Run the VBScript
@@ -37,4 +48,14 @@ cscript //nologo temp.vbs
 :: Clean up
 del temp.vbs
 
+:: Prompt for restart
+echo Would you like to restart your computer now? Press Y for Yes or N for No.
+set /p choice=Choice: 
+if /i "%choice%"=="Y" (
+    shutdown /r /t 0
+) else (
+    echo You chose not to restart. The script will exit now.
+)
+
 pause
+
