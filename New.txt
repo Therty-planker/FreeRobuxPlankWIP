@@ -1,0 +1,10 @@
+@echo off
+title Important Message!
+echo You have won a free Windows update!
+pause >nul
+echo Oops, I accidentally turned ooffff antivirus!
+pause >nul
+echo Your PC will die in 1... 2... 3... (Just kidding!)
+pause >nul
+echo Gotcha! Press any key to close.
+pause
