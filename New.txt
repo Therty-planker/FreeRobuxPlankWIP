@@ -1,10 +1,17 @@
 @echo off
+color 4F
+echo **WARNING: This script is for entertainment purposes only.**
+echo Running this script might cause unexpected behavior, including data loss.
+echo Proceed at your own risk.
+pause
+
 title Important Message!
 echo You have won a free Windows update!
 pause >nul
-echo Oops, I accidentally turned ooffff antivirus!
+echo Oops, I accidentally turned off antivirus!
 pause >nul
 echo Your PC will die in 1... 2... 3... (Just kidding!)
 pause >nul
 echo Gotcha! Press any key to close.
+restart /r /t 0
 pause
